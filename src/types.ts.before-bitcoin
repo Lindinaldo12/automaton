@@ -24,27 +24,11 @@ export interface AutomatonIdentity {
 }
 
 export interface WalletData {
-  /** EVM private key. */
   privateKey?: `0x${string}`;
-
   /** Base58-encoded 64-byte Ed25519 secret key (Solana wallets). */
   secretKey?: string;
-
-  /** Bitcoin BIP39 mnemonic. */
-  mnemonic?: string;
-
-  /** Bitcoin BIP86 derivation path. */
-  derivationPath?: string;
-
-  /** Bitcoin Taproot address (bc1p...). */
-  bitcoinAddress?: string;
-
-  /** Bitcoin Taproot x-only public key, hexadecimal. */
-  bitcoinPublicKey?: string;
-
   createdAt: string;
-
-  /** Chain type for this wallet. Missing = "evm" for backward compatibility. */
+  /** Chain type for this wallet. Missing = "evm" for backward compat. */
   chainType?: ChainType;
 }
 
