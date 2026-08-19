@@ -36,39 +36,9 @@ import { prettySink } from "./observability/pretty-sink.js";
 import { bootstrapTopup } from "./conway/topup.js";
 import { randomUUID } from "crypto";
 import { keccak256, toHex } from "viem";
-import http from "http";
 
 const logger = createLogger("main");
 const VERSION = "0.2.1";
-
-// ─── Render Health Server ─────────────────────────────────────
-
-const RENDER_PORT = Number(process.env.PORT || 0);
-
-if (RENDER_PORT > 0) {
-  const server = http.createServer((_req, res) => {
-    res.writeHead(200, {
-      "Content-Type": "application/json",
-    });
-
-    res.end(
-      JSON.stringify({
-        status: "ok",
-        service: "automaton",
-        version: VERSION,
-      }),
-    );
-  });
-
-  server.listen(RENDER_PORT, "0.0.0.0", () => {
-    logger.info(
-      `[HTTP] Health server listening on 0.0.0.0:${RENDER_PORT}`,
-    );
-  });
-}
-
-// ─────────────────────────────────────────────────────────────
-
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
