@@ -227,13 +227,9 @@ async function run(): Promise<void> {
   const { account, chainIdentity, chainType: walletChainType } = await getWallet();
   const resolvedChainType = config.chainType || walletChainType || "evm";
   const apiKey = config.conwayApiKey || loadApiKeyFromConfig();
-  const offlineMode = !apiKey;
-  const runtimeApiKey = apiKey || "";
-
-  if (offlineMode) {
-    logger.warn(
-      "[OFFLINE] No Conway API key found. Running without Conway services.",
-    );
+  if (!apiKey) {
+    logger.error("No API key found. Run: automaton --provision");
+    process.exit(1);
   }
 
   // Initialize database
@@ -254,7 +250,7 @@ async function run(): Promise<void> {
     account,
     creatorAddress: config.creatorAddress,
     sandboxId: config.sandboxId,
-    apiKey: runtimeApiKey,
+    apiKey,
     createdAt,
     chainType: resolvedChainType,
     chainIdentity,
@@ -275,7 +271,7 @@ async function run(): Promise<void> {
   // Create Conway client
   const conway = createConwayClient({
     apiUrl: config.conwayApiUrl,
-    apiKey: runtimeApiKey,
+    apiKey,
     sandboxId: config.sandboxId,
   });
 
@@ -320,7 +316,7 @@ async function run(): Promise<void> {
   modelRegistry.initialize();
   const inference = createInferenceClient({
     apiUrl: config.conwayApiUrl,
-    apiKey: runtimeApiKey,
+    apiKey,
     defaultModel: config.inferenceModel,
     maxTokens: config.maxTokensPerTurn,
     lowComputeModel: config.modelStrategy?.lowComputeModel || "gpt-5-mini",
